@@ -7,7 +7,7 @@
 # SHACL is the gem's SECOND grammar (data shapes), derived so it cannot drift from the message grammar.
 # Used symmetrically: IN shapes accept-as-API-input; OUT shapes validate the graph-out projection.
 
-# --- grammar-in: API INPUT shapes (accept-as-input), one per <statement> command ---
+# --- grammar-in: API INPUT shapes (accept-as-input) ---
 g:OpenArcRequest a sh:NodeShape ;
   rdfs:comment "input for the 'open_arc' command" ;
   sh:property [ sh:path g:title ; sh:datatype xsd:string ; sh:minCount 0 ; sh:maxCount 1 ] .
