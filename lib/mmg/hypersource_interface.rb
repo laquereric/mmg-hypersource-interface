@@ -5,13 +5,13 @@ require_relative "hypersource_interface/execute"
 # mmg-hypersource-interface -- the OPAQUE, discoverable, drop-in peer of mmg-hypersource. MmgFederation finds
 # Mmg::HypersourceInterface (a direct Mmg constant that responds to mcb_actions) and registers the SAME four
 # actions, so swapping the Gemfile line (mmg-hypersource -> mmg-hypersource-interface) yields the same MCB
-# surface -- now Rust-backed. Ships the full grammar-in/graph-out contract: GRAMMAR (bnf) + BOUNDARY (ttl) +
-# SHACL (graph-out shapes), so a PUBLIC consumer has everything without the ruby repo.
+# surface -- now Rust-backed. PUBLIC surface publishes ONLY W3C standards: SHACL (the data-shape grammar --
+# accept-as-input + graph-out). The non-standard grammar.bnf and the boundary.ttl source stay INTERNAL to the
+# (private) mmg-hypersource ruby gem, which derives this SHACL. A public consumer needs only the W3C SHACL.
 module Mmg
   module HypersourceInterface
-    GRAMMAR  = ::File.expand_path("hypersource_interface/grammar.bnf", __dir__)
-    BOUNDARY = ::File.expand_path("hypersource_interface/boundary.ttl", __dir__)
-    SHACL    = ::File.expand_path("hypersource_interface/shacl.ttl", __dir__)
+    # W3C-standard contract (the only published interface artifact).
+    SHACL = ::File.expand_path("hypersource_interface/shacl.ttl", __dir__)
 
     module_function
 
