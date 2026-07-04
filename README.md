@@ -1,13 +1,15 @@
 # mmg-hypersource-interface
 
-The matured, slot-facing peer of `mmg-hypersource`: **grammar registration + a Rust IDENTITY native
-extension**. Deterministic identity (`arc/<id>/<engine>/<tuning>`) runs in Rust (byte parity with the Ruby
-peer, enforced by `mmg-hypersource/spec/identity_parity_bench.rb`). Orchestration stays in `mmg-hypersource`.
+The **opaque, drop-in** peer of `mmg-hypersource`. Registers the SAME hypersource MCB surface
+(`Mmg::HypersourceInterface`, four actions) backed by an **opaque Rust native extension** (native speed,
+hidden implementation). **Swap the Gemfile line** (`mmg-hypersource` → `mmg-hypersource-interface`) and a
+slot gets the same grammar-in/graph-out surface, now Rust-backed.
 
-- **native-extension** (magnus + rb_sys), in-process.
-- **darwin-arm64** only (precompiled). Other platforms: source install.
-- **Rust source is a password-protected zip** (`ext/.../rust_src.zip`) — IP protection. The password is
-  plaintext in the MAIN repo (`secrets/mmg-hypersource-interface.rust-src.password`) for now; `extconf.rb`
-  reads `MMG_RUST_SRC_PASSWORD` or that file to extract + compile. No password → Ruby peer still works.
-
-A slot mounts EITHER `mmg-hypersource` (Ruby, portable, the oracle) OR this gem (Rust identity, fast).
+- **Full contract for public consumers:** ships `grammar.bnf` (grammar-in) + `boundary.ttl` +
+  **`shacl.ttl`** (graph-out shapes for `urn:mmg:hypersource:public`) — so a consumer holding only this gem
+  can do grammar-in / graph-out fully, no ruby repo needed.
+- **Opaque:** the Rust source ships only as a password-protected zip (`ext/.../rust_src.zip`); `extconf`
+  extracts + compiles on a source install (`MMG_RUST_SRC_PASSWORD`), else skips (actions report
+  `:native_unavailable`). Precompiled: darwin-arm64.
+- **Specs live only in `mmg-hypersource`** (the ruby repo) — `spec/identity_parity_bench.rb` proves byte
+  parity between the two peers before any build ships.

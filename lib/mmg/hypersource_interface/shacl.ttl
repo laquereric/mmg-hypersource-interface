@@ -1,0 +1,14 @@
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix g:    <urn:mm:grammar:hypersource#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# SHACL shapes for the hypersource GRAPH-OUT (urn:mmg:hypersource:public). This is the "graph-out" half of
+# grammar-in/graph-out: a consumer validates + consumes the projected arcs against these shapes. Shipped in
+# BOTH the ruby repo AND this interface repo, so a PUBLIC consumer holding only the (opaque) interface gem
+# still has the FULL contract -- grammar in, graph out.
+g:ArcShape a sh:NodeShape ;
+  sh:targetClass g:Arc ;
+  rdfs:comment "An arc identity projected to urn:mmg:hypersource:public: exactly one branch + one worktree string." ;
+  sh:property [ sh:path g:branch ;   sh:name "branch" ;   sh:datatype xsd:string ; sh:minCount 1 ; sh:maxCount 1 ] ;
+  sh:property [ sh:path g:worktree ; sh:name "worktree" ; sh:datatype xsd:string ; sh:minCount 1 ; sh:maxCount 1 ] .

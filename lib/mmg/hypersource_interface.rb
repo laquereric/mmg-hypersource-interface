@@ -1,0 +1,44 @@
+# frozen_string_literal: true
+require_relative "hypersource_interface/version"
+require_relative "hypersource_interface/execute"
+
+# mmg-hypersource-interface -- the OPAQUE, discoverable, drop-in peer of mmg-hypersource. MmgFederation finds
+# Mmg::HypersourceInterface (a direct Mmg constant that responds to mcb_actions) and registers the SAME four
+# actions, so swapping the Gemfile line (mmg-hypersource -> mmg-hypersource-interface) yields the same MCB
+# surface -- now Rust-backed. Ships the full grammar-in/graph-out contract: GRAMMAR (bnf) + BOUNDARY (ttl) +
+# SHACL (graph-out shapes), so a PUBLIC consumer has everything without the ruby repo.
+module Mmg
+  module HypersourceInterface
+    GRAMMAR  = ::File.expand_path("hypersource_interface/grammar.bnf", __dir__)
+    BOUNDARY = ::File.expand_path("hypersource_interface/boundary.ttl", __dir__)
+    SHACL    = ::File.expand_path("hypersource_interface/shacl.ttl", __dir__)
+
+    module_function
+
+    def mcb_actions
+      na = { ok: false, reason: :native_unavailable,
+             because: "mmg-hypersource-interface native ext not built -- `rake compile` or install the arm64-darwin gem" }
+      guard = ->(blk) { Execute.available? ? blk.call : na }
+      [
+        { name: "hypersource_open_arc", domain: "hypersource", personas: %w[superdev developer],
+          describe: "Open an arc identity (Rust) + project it to urn:mmg:hypersource:public.",
+          input_schema: { type: "object", properties: { title: { type: "string" } } },
+          handler: ->(i, _c) { guard.call(-> { Execute.open_arc(title: i[:title]) }) } },
+        { name: "hypersource_arc_for_brief", domain: "hypersource", personas: %w[superdev developer],
+          describe: "The keystone: resolve a brief's arc/branch/worktree (Rust identity).",
+          input_schema: { type: "object", properties: { brief_id: { type: "string" } }, required: %w[brief_id] },
+          handler: ->(i, _c) { guard.call(-> { Execute.arc_for_brief(i[:brief_id]) }) } },
+        { name: "hypersource_identity", domain: "hypersource", personas: %w[superdev developer],
+          describe: "Deterministic identity (arc/<id>/<engine>/<tuning>) via the Rust native ext. No side effects.",
+          input_schema: { type: "object", properties: { arc_id: { type: "string" }, engine_config: { type: "string" }, tuning: { type: "string" } }, required: %w[arc_id] },
+          handler: ->(i, _c) { guard.call(-> { { ok: true, arc_id: i[:arc_id], engine_config: i[:engine_config], tuning: i[:tuning], backend: :rust,
+                                                  branch: Execute.arc_branch(i[:arc_id], i[:engine_config], i[:tuning]),
+                                                  worktree: Execute.arc_worktree(i[:arc_id], i[:engine_config], i[:tuning]) } }) } },
+        { name: "hypersource_variants", domain: "hypersource", personas: %w[superdev developer],
+          describe: "Apples-to-apples comparison set (per engine/tuning) via the Rust native ext.",
+          input_schema: { type: "object", properties: { arc_id: { type: "string" }, variants: { type: "array" } }, required: %w[arc_id variants] },
+          handler: ->(i, _c) { guard.call(-> { { ok: true, arc_id: i[:arc_id], backend: :rust, variants: Execute.engine_variants(i[:arc_id], i[:variants]) } }) } }
+      ]
+    end
+  end
+end

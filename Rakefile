@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-# darwin-arm64 ONLY (per operator). Native-extension. `rake compile` builds the local .bundle (needs the
-# decrypted Rust source: MMG_RUST_SRC_PASSWORD or the main-repo password file). No cross matrix.
+# darwin-arm64 native extension. `rake compile` builds the local .bundle (needs the decrypted Rust source via
+# MMG_RUST_SRC_PASSWORD or the main-repo password file). Specs live in the mmg-hypersource repo, not here.
 begin
   require "rb_sys/extensiontask"
   RbSys::ExtensionTask.new("mmg_hypersource_identity") do |ext|
