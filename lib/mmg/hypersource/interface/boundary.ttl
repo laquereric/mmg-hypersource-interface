@@ -1,0 +1,9 @@
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix g:    <urn:mm:grammar:hypersource#> .
+
+# mmg-hypersource boundary -- source-identity concepts. Joins MM's ontology (union of the grammars).
+g:Arc      a owl:Class ; rdfs:label "arc"      ; rdfs:comment "a delivery arc: id, branch arc/<id>, worktree" .
+g:Branch   a owl:Class ; rdfs:label "branch"   ; rdfs:comment "arc branch name (arc/<arc_id>)" .
+g:Worktree a owl:Class ; rdfs:label "worktree" ; rdfs:comment "arc worktree / (brief,engine) pane folder" .
+g:Keystone a owl:Class ; rdfs:label "keystone" ; rdfs:comment "turn.arc = cited_brief.arc -- the routing citation" .

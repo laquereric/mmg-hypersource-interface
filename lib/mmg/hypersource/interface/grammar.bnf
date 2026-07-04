@@ -1,0 +1,16 @@
+; mmg-hypersource grammar -- ONE source identity across SuperDevAI<->Slot. grammar-in/graph-out: these
+; productions are the MESSAGES; Mmg::Hypersource::Execute is the logic (git delegates to mmg-git); the
+; graph holds arc/branch state. Identity first; sync/fan-in fold in Harness::HyperSource later.
+
+<statement>     ::= <open_arc> | <branch> | <worktree> | <arc_for_brief> | <sync>
+
+<open_arc>      ::= "open_arc" ( <title> )?                 ; mint arc identity (id + branch + worktree)
+<branch>        ::= "branch" <arc_id>                       ; the arc branch name (arc/<arc_id>)
+<worktree>      ::= "worktree" <arc_id> | "pane" <brief_id> <engine>  ; arc worktree / (brief,engine) folder
+<arc_for_brief> ::= "arc_for" <brief_id>                    ; the keystone: turn.arc = cited_brief.arc
+<sync>          ::= "sync" <arc_id>                         ; arc -> main (folds Harness::HyperSource)
+
+<arc_id>        ::= "arc_" IDENTIFIER
+<brief_id>      ::= "brf_" IDENTIFIER
+<engine>        ::= IDENTIFIER
+<title>         ::= STRING

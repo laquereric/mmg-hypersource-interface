@@ -1,0 +1,7 @@
+# Only the ENCRYPTED source ships (rust_src.zip). The cleartext extracted by extconf on install is build-local.
+/Cargo.toml
+/src/
+/target/
+*.bundle
+*.so
+*.o
