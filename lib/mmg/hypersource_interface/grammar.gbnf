@@ -1,0 +1,14 @@
+# GENERATED from grammar.bnf by Mmg::Optimize::GrammarGbnf -- GBNF for local-model constrained decoding.
+root ::= statement
+statement ::= open-arc | branch | worktree | arc-for-brief | sync
+open-arc ::= "open_arc" ( title )?
+branch ::= "branch" arc-id
+worktree ::= "worktree" arc-id | "pane" brief-id engine
+arc-for-brief ::= "arc_for" brief-id
+sync ::= "sync" arc-id
+arc-id ::= "arc_" ident
+brief-id ::= "brf_" ident
+engine ::= ident
+title ::= string
+ident ::= [a-zA-Z_] [a-zA-Z0-9_-]*
+string ::= "\"" [^"]* "\""

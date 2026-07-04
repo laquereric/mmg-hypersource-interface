@@ -10,8 +10,11 @@ require_relative "hypersource_interface/execute"
 # (private) mmg-hypersource ruby gem, which derives this SHACL. A public consumer needs only the W3C SHACL.
 module Mmg
   module HypersourceInterface
-    # W3C-standard contract (the only published interface artifact).
+    # Published derived interfaces (no BNF source ships): SHACL (W3C data-shape grammar, hosted-provider tool
+    # contract) + GBNF (llama.cpp/outlines grammar, LOCAL-model constrained decoding). A consumer targets any
+    # model class from these: hosted via SHACL->JSON-Schema, local via the GBNF grammar.
     SHACL = ::File.expand_path("hypersource_interface/shacl.ttl", __dir__)
+    GBNF  = ::File.expand_path("hypersource_interface/grammar.gbnf", __dir__)
 
     module_function
 
